@@ -7,19 +7,22 @@ from PyQt5.QtGui import QIcon , QFontDatabase , QIcon
 
 
 class HealthyProducts(QWidget):
-    def __init__(self):
+    def __init__(self,stacked_widget):
         super().__init__()
+        self.stacked_widget=stacked_widget
         self.dash_label=QLabel("Welcome to the Healthy Products Finder App",self)
-        self.dash_label2=QLabel("Enter your username (or create a new one if you don't have one)",self)
+        self.dash_label2=QLabel("Enter your username\n(or create a new one if you don't have one)",self)
         self.input_user_name=QLineEdit(self)
         self.input_get=QPushButton("Submit Username",self)
         self.input_get_new_user_name=QPushButton("Create Unique Username",self)
+        self.input_get_new_user_name.clicked.connect(self.go_to_new_user)
         self.initUI()
+
+    def go_to_new_user(self):
+        self.stacked_widget.setCurrentIndex(1)
 
 
     def initUI(self):
-        self.setWindowTitle("Healthy Products Finder")
-        self.setWindowIcon(QIcon("icon.png"))
         vbox=QVBoxLayout()
         vbox.addWidget(self.dash_label)
         vbox.addWidget(self.dash_label2)
@@ -31,8 +34,7 @@ class HealthyProducts(QWidget):
         self.dash_label.setAlignment(Qt.AlignCenter)
         self.dash_label2.setAlignment(Qt.AlignCenter)
         self.input_user_name.setAlignment(Qt.AlignCenter)
-        self.input_get.setAlignment(Qt.AlignCenter)
-        self.input_get_new_user_name.setAlignment(Qt.AlignCenter)
+        self.setLayout(vbox)
 
         
         self.dash_label.setObjectName("dash_label")
@@ -54,9 +56,10 @@ class HealthyProducts(QWidget):
                 margin-bottom: 15px;
             }
             QLabel#dash_label2 {
-                font-size: 16px;
+                font-size: 18px;      
+                font-weight: 600;     
                 color: #01b4e4;
-                margin-bottom: 10px;
+                margin-bottom: 15px;
             }
             QLineEdit {
                 padding: 8px;
