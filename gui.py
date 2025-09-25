@@ -16,10 +16,15 @@ class HealthyProducts(QWidget):
         self.input_get=QPushButton("Submit Username",self)
         self.input_get_new_user_name=QPushButton("Create Unique Username",self)
         self.input_get_new_user_name.clicked.connect(self.go_to_new_user)
+        self.test_button=QPushButton("check the user page",self)
+        self.test_button.clicked.connect(self.go_to_user_page)
+
         self.initUI()
 
     def go_to_new_user(self):
         self.stacked_widget.setCurrentIndex(1)
+    def go_to_user_page(self):
+        self.stacked_widget.setCurrentIndex(2)
 
 
     def initUI(self):
@@ -29,6 +34,7 @@ class HealthyProducts(QWidget):
         vbox.addWidget(self.input_user_name)
         vbox.addWidget(self.input_get)
         vbox.addWidget(self.input_get_new_user_name)
+        vbox.addWidget(self.test_button)
 
 
         self.dash_label.setAlignment(Qt.AlignCenter)
