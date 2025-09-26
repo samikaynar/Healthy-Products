@@ -1,8 +1,10 @@
 import sys
 import requests
 from PyQt5.QtWidgets import QApplication, QWidget,QLabel , QLineEdit ,QPushButton ,QVBoxLayout ,QMainWindow
-from PyQt5.QtCore import Qt
+from PyQt5.QtCore import Qt , QTimer
 from PyQt5.QtGui import QIcon , QFontDatabase , QIcon
+import log_in_service
+
 
 
 
@@ -14,11 +16,13 @@ class HealthyProducts(QWidget):
         self.username_label=QLabel("Enter your username and password\n(or create a new one if you don't have one)",self)
         self.input_user_name=QLineEdit(self)
         self.input_password=QLineEdit(self)
+        self.result_label = QLabel(self)
         self.input_get=QPushButton("Submit Username",self)
         self.input_get_new_user_name=QPushButton("Create Unique Username",self)
+        self.input_get.clicked.connect(self.logIn_button)
         self.input_get_new_user_name.clicked.connect(self.go_to_new_user)
-        self.test_button=QPushButton("check the user page",self)
-        self.test_button.clicked.connect(self.go_to_user_page)
+        
+        
 
         self.initUI()
 
@@ -36,7 +40,6 @@ class HealthyProducts(QWidget):
         vbox.addWidget(self.input_password)
         vbox.addWidget(self.input_get)
         vbox.addWidget(self.input_get_new_user_name)
-        vbox.addWidget(self.test_button)
 
 
         self.dash_label.setAlignment(Qt.AlignCenter)
@@ -88,5 +91,32 @@ class HealthyProducts(QWidget):
             }
         """)
 
+    
+
+        
+    def logIn_button(self):
+        username=self.input_user_name.text()
+        password=self.input_password.text()
+        user_id=log_in_service.log_in(username,password)
+
+
+            
+        if user_id==False:
+            self.result_label.setText("Invalid username or password! Try again.")
+            self.result_label.setStyleSheet("color: red; font-weight: bold;")
+
+
+        else :
+            self.stacked_widget.user_id= user_id
+            self.result_label.setText("Login successful!")
+            self.result_label.setStyleSheet("color: green; font-weight: bold;")
+            QTimer.singleShot(1500,self.go_to_user_page)
+            self.input_user_name.clear()
+            self.input_password.clear()
+            self.result_label.clear()
+
+            
+            
+                        
         
 
