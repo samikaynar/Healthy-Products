@@ -17,11 +17,15 @@ class User_Page(QWidget):
         self.AI_label=QLabel(self)
         self.get_favorite=QPushButton("View Favorites",self)
         self.log_out_label.clicked.connect(self.log_out_button)
+        self.get_favorite.clicked.connect(self.go_to_favorites)
         self.initUI()
 
 
     def log_out_button(self):
         self.stacked_widget.setCurrentIndex(0)
+    
+    def go_to_favorites(self):
+        self.stacked_widget.setCurrentIndex(3)
 
     def initUI(self):
         vbox=QVBoxLayout()

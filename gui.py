@@ -11,8 +11,9 @@ class HealthyProducts(QWidget):
         super().__init__()
         self.stacked_widget=stacked_widget
         self.dash_label=QLabel("Welcome to the Healthy Products Finder App",self)
-        self.dash_label2=QLabel("Enter your username\n(or create a new one if you don't have one)",self)
+        self.username_label=QLabel("Enter your username and password\n(or create a new one if you don't have one)",self)
         self.input_user_name=QLineEdit(self)
+        self.input_password=QLineEdit(self)
         self.input_get=QPushButton("Submit Username",self)
         self.input_get_new_user_name=QPushButton("Create Unique Username",self)
         self.input_get_new_user_name.clicked.connect(self.go_to_new_user)
@@ -30,21 +31,23 @@ class HealthyProducts(QWidget):
     def initUI(self):
         vbox=QVBoxLayout()
         vbox.addWidget(self.dash_label)
-        vbox.addWidget(self.dash_label2)
+        vbox.addWidget(self.username_label)
         vbox.addWidget(self.input_user_name)
+        vbox.addWidget(self.input_password)
         vbox.addWidget(self.input_get)
         vbox.addWidget(self.input_get_new_user_name)
         vbox.addWidget(self.test_button)
 
 
         self.dash_label.setAlignment(Qt.AlignCenter)
-        self.dash_label2.setAlignment(Qt.AlignCenter)
+        self.username_label.setAlignment(Qt.AlignCenter)
         self.input_user_name.setAlignment(Qt.AlignCenter)
+        self.input_password.setAlignment(Qt.AlignCenter)
         self.setLayout(vbox)
 
         
         self.dash_label.setObjectName("dash_label")
-        self.dash_label2.setObjectName("dash_label2")
+        self.username_label.setObjectName("username_label")
         self.input_user_name.setObjectName("input_user_name")
         self.input_get.setObjectName("input_get")
         self.input_get_new_user_name.setObjectName("input_get_new_user_name")
@@ -61,7 +64,7 @@ class HealthyProducts(QWidget):
                 color: #0d253f;
                 margin-bottom: 15px;
             }
-            QLabel#dash_label2 {
+            QLabel#username_label {
                 font-size: 18px;      
                 font-weight: 600;     
                 color: #01b4e4;

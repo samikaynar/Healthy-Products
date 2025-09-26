@@ -2,16 +2,20 @@ import sys
 from PyQt5.QtWidgets import QWidget, QLabel, QLineEdit, QPushButton, QVBoxLayout
 from PyQt5.QtCore import Qt
 from PyQt5.QtGui import QIcon
+import create_user_service
 
 class NewUserDialog(QWidget):
     def __init__(self,stacked_widget):
         super().__init__()
         self.stacked_widget=stacked_widget
-        self.create_username_label = QLabel("Enter a Unique Username", self)
+        self.create_username_label = QLabel("Enter a Unique Username and password", self)
         self.get_username = QLineEdit(self)
+        self.get_password = QLineEdit(self)
         self.check_username = QPushButton("Check Username", self)
+        self.result_label = QLabel(self)
         self.main_page=QPushButton("Main Page",self)
         self.main_page.clicked.connect(self.go_to_main_page)
+        self.check_username.clicked.connect(self.create_user_button)
         self.initUI()
     
     def go_to_main_page(self):
@@ -22,6 +26,8 @@ class NewUserDialog(QWidget):
         vbox = QVBoxLayout()
         vbox.addWidget(self.create_username_label)
         vbox.addWidget(self.get_username)
+        vbox.addWidget(self.get_password)
+        vbox.addWidget(self.result_label)
         vbox.addWidget(self.check_username)
         vbox.addWidget(self.main_page)
         self.setLayout(vbox)
@@ -29,6 +35,8 @@ class NewUserDialog(QWidget):
         # Alignment
         self.create_username_label.setAlignment(Qt.AlignCenter)
         self.get_username.setAlignment(Qt.AlignCenter)
+        self.get_password.setAlignment(Qt.AlignCenter)
+        self.result_label.setAlignment(Qt.AlignCenter)
         self.check_username.setAutoDefault(True)
 
         # Object names for styling
@@ -77,5 +85,23 @@ class NewUserDialog(QWidget):
 
             QPushButton#main_page:hover {
                 background-color: #90cea1;
-}
+                
+                    }
+                           
+
         """)
+
+    
+    def create_user_button(self):
+        username = self.get_username.text()
+        password = self.get_password.text()
+
+        if create_user_service.create_user(username,password):
+            self.result_label.setText("Success! User created successfully!")
+            self.result_label.setStyleSheet("color: green; font-weight: bold; font-size: 15px")
+            self.result_label.setFixedSize(300, 30)
+        else:
+            self.result_label.setText("Error! Username already exists!")
+            self.result_label.setStyleSheet("color: red; font-weight: bold; font-size: 15px")
+            self.result_label.setFixedSize(300, 30)
+
