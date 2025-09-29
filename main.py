@@ -9,6 +9,7 @@ from user_page import User_Page
 from favorites_page import FavoritePage
 
 
+
 if __name__ == "__main__":
     app = QApplication(sys.argv)
 

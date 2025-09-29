@@ -1,7 +1,8 @@
 import sys
-from PyQt5.QtWidgets import QApplication, QWidget,QLabel , QLineEdit ,QPushButton ,QVBoxLayout ,QMainWindow , QHBoxLayout
+from PyQt5.QtWidgets import QApplication, QWidget,QLabel , QLineEdit ,QPushButton ,QVBoxLayout ,QMainWindow , QHBoxLayout , QListWidget
 from PyQt5.QtCore import Qt
 from PyQt5.QtGui import QIcon , QFontDatabase , QIcon
+import food_api_service
 
 
 
@@ -14,10 +15,12 @@ class User_Page(QWidget):
         self.input_product=QLineEdit(self)
         self.get_input_button=QPushButton("Check",self)
         self.result_label=QLabel(self)
+        self.result_List=QListWidget(self)
         self.AI_label=QLabel(self)
         self.get_favorite=QPushButton("View Favorites",self)
         self.log_out_label.clicked.connect(self.log_out_button)
         self.get_favorite.clicked.connect(self.go_to_favorites)
+        self.get_input_button.clicked.connect(self.product_info)
         self.initUI()
 
 
@@ -26,6 +29,7 @@ class User_Page(QWidget):
     
     def go_to_favorites(self):
         self.stacked_widget.setCurrentIndex(3)
+    
 
     def initUI(self):
         vbox=QVBoxLayout()
@@ -47,6 +51,7 @@ class User_Page(QWidget):
 
 
         vbox.addWidget(self.result_label)
+        vbox.addWidget(self.result_List)
         vbox.addWidget(self.AI_label)
         
         self.setLayout(vbox)
@@ -124,6 +129,42 @@ class User_Page(QWidget):
         """)
 
 
-        
+    def product_info(self):
+        self.result_label.clear()
+        self.result_List.clear()
+        product=self.input_product.text().strip()
+        data=food_api_service.request_info(product)
+
+        if not product:
+            self.result_label.setText("Please enter barcode number or product name!")
+            self.result_label.clear()
+            self.result_List.hide()
+        else:
+            if isinstance(data,dict):
+                if "error" in data:
+                    self.result_label.setText(data["error"])
+                    self.result_List.hide()
+                    return
+                else:
+                    name=data.get("product_name","there is no name info")
+                    ingredients=data.get("ingredients_text","there is no ingredients info")
+                    self.result_label.setText(f"Product name:{name} ingredients:{ingredients}")
+                    self.result_List.hide()
+
+            elif isinstance(data,list):
+                if data and "error" in data[0]:
+                    self.result_label.setText(data[0]["error"])
+                    self.result_List.hide()
+                    self.result_label.show()
+                else:
+                    for p in data:
+                        name=p.get("product_name","there is no name info")
+                        barcode=p.get("code","there is no barcode info")
+                        self.result_List.addItem(f"{name} | {barcode}")
+                    self.result_List.show()
+                    self.result_label.hide()
+
+
+
         
 

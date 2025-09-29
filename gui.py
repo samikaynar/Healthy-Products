@@ -16,6 +16,7 @@ class HealthyProducts(QWidget):
         self.username_label=QLabel("Enter your username and password\n(or create a new one if you don't have one)",self)
         self.input_user_name=QLineEdit(self)
         self.input_password=QLineEdit(self)
+        self.input_password.setEchoMode(QLineEdit.Password)
         self.result_label = QLabel(self)
         self.input_get=QPushButton("Submit Username",self)
         self.input_get_new_user_name=QPushButton("Create Unique Username",self)
@@ -104,7 +105,9 @@ class HealthyProducts(QWidget):
         if user_id==False:
             self.result_label.setText("Invalid username or password! Try again.")
             self.result_label.setStyleSheet("color: red; font-weight: bold;")
-
+            self.input_user_name.clear()
+            self.input_password.clear()
+            QTimer.singleShot(4000,self.result_label.clear)
 
         else :
             self.stacked_widget.user_id= user_id
@@ -113,7 +116,7 @@ class HealthyProducts(QWidget):
             QTimer.singleShot(1500,self.go_to_user_page)
             self.input_user_name.clear()
             self.input_password.clear()
-            self.result_label.clear()
+            QTimer.singleShot(1500,self.result_label.clear)
 
             
             
