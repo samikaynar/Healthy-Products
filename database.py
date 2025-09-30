@@ -1,4 +1,6 @@
 import mysql.connector
+import os
+from dotenv import load_dotenv
 
 
 
@@ -9,7 +11,7 @@ def get_connection():
     return  mysql.connector.connect(
         host="localhost",
         user="root",
-        password="",
+        password=os.getenv("DATABASE_PASSWORD"),
         database="healthy_products_db",
     )
 
