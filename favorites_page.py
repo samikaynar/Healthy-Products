@@ -1,7 +1,9 @@
 import sys
-from PyQt5.QtWidgets import QWidget, QLabel, QLineEdit, QPushButton, QVBoxLayout, QTableWidget, QHBoxLayout
+from PyQt5.QtWidgets import QWidget, QLabel, QLineEdit, QPushButton, QVBoxLayout, QTableWidget, QHBoxLayout , QTableWidgetItem
 from PyQt5.QtCore import Qt
 from PyQt5.QtGui import QIcon, QPixmap
+from database import get_connection
+
 
 
 class FavoritePage(QWidget):
@@ -13,14 +15,56 @@ class FavoritePage(QWidget):
         self.personality_label = QLabel("AI Doctor: Here will be your health advice...", self)
         self.doctor_picture=QLabel(self)
         self.pixmap=QPixmap("snakedoctor.png")
+        self.table=QTableWidget()
+        self.table.setColumnCount(3)
+        self.table.setHorizontalHeaderLabels(["Product Name", "Product Barcode", "Healty Score"])
+
+
 
         
         self.back_button.clicked.connect(self.go_back)
-
+        
         self.initUI()
+        
+
+    def showEvent(self, event):
+        self.current_user_id = self.stacked_widget.current_user_id 
+        self.display_favorites()
+        super().showEvent(event)
+        
     #connection for user page
     def go_back(self):
         self.stacked_widget.setCurrentIndex(2)
+
+    def display_favorites(self):
+
+        
+        self.current_user_id=self.stacked_widget.current_user_id
+        db=get_connection()
+        curr=db.cursor()
+        curr.execute(""" select 
+                        products.name,
+                        products.barcode,
+                        ai_analysis.health_score
+                        from favorites
+                        join products on favorites.product_id = products.id
+                        left join ai_analysis on products.id = ai_analysis.product_id
+                        where favorites.user_id = %s
+                      """,(self.current_user_id,))
+        
+        results=curr.fetchall()
+        
+        self.table.setRowCount(len(results))
+
+
+        for index,data in enumerate(results):
+            self.table.setItem(index,0,QTableWidgetItem(str(data[0])))
+            self.table.setItem(index,1,QTableWidgetItem(str(data[1])))
+            self.table.setItem(index,2,QTableWidgetItem(str(data[2])))
+        
+        self.table.show()
+        
+
 
     #Interface
     def initUI(self):
